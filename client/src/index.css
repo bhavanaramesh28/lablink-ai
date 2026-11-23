@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  html.light {
+    color-scheme: light;
+  }
+
+  body {
+    @apply font-body antialiased transition-colors duration-200 min-h-screen overflow-x-hidden;
+  }
+
+  /* Dark mode background */
+  html.dark body {
+    background-color: #070B18;
+    color: #FFFFFF;
+    background-image:
+      radial-gradient(circle at 12% 15%, rgba(139, 92, 246, 0.16), transparent 42%),
+      radial-gradient(circle at 88% 25%, rgba(0, 217, 255, 0.14), transparent 45%),
+      radial-gradient(circle at 50% 85%, rgba(40, 123, 255, 0.10), transparent 50%);
+    background-attachment: fixed;
+  }
+
+  /* Light mode background */
+  html.light body {
+    background-color: #F8FAFC;
+    color: #0F172A;
+    background-image:
+      radial-gradient(circle at 10% 15%, rgba(0, 217, 255, 0.08), transparent 40%),
+      radial-gradient(circle at 90% 20%, rgba(139, 92, 246, 0.08), transparent 45%),
+      radial-gradient(circle at 50% 90%, rgba(40, 123, 255, 0.05), transparent 50%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 dark:bg-[#182548] rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-cyan-glow;
+  }
+}
+
+@layer components {
+  /* Dynamic Glass Cards for Dark & Light */
+  .glass {
+    @apply bg-white/80 dark:bg-[#101A35]/60 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl shadow-sm dark:shadow-xl text-slate-900 dark:text-white transition-colors duration-200;
+  }
+
+  .glass-card {
+    @apply bg-white dark:bg-gradient-to-b dark:from-[#101A35]/80 dark:to-[#0B1224]/80 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl shadow-md dark:shadow-xl text-slate-900 dark:text-white transition-all duration-300;
+  }
+
+  .glass-hover {
+    @apply transition-all duration-300;
+  }
+  .glass-hover:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 217, 255, 0.5);
+    box-shadow: 0 0 25px rgba(0, 217, 255, 0.45);
+  }
+
+  .glass-hologram {
+    @apply bg-white/90 dark:bg-[#101A35]/50 backdrop-blur-2xl border border-cyan-glow/40 rounded-2xl;
+    box-shadow: 0 0 35px rgba(0, 217, 255, 0.25), inset 0 0 20px rgba(139, 92, 246, 0.15);
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-cyan-glow via-blue-neon to-purple-glow bg-clip-text text-transparent font-extrabold;
+  }
+
+  .text-gradient-purple {
+    @apply bg-gradient-to-r from-blue-neon via-violet-glow to-cyan-glow bg-clip-text text-transparent font-extrabold;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl bg-slate-100/90 dark:bg-[#0B1224]/80 border border-slate-300 dark:border-white/15 px-4 py-3 text-sm text-slate-900 dark:text-white
+           placeholder:text-slate-400 dark:placeholder:text-white/40 focus:outline-none focus:border-cyan-glow
+           focus:ring-2 focus:ring-cyan-glow/30 transition-all duration-200;
+  }
+
+  .badge-cyan {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-glow/15 text-cyan-600 dark:text-cyan-glow border border-cyan-glow/40;
+  }
+
+  .badge-purple {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-glow/15 text-purple-600 dark:text-purple-glow border border-purple-glow/40;
+  }
+
+  .badge-aqua {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-aqua-glow/15 text-emerald-600 dark:text-aqua-glow border border-aqua-glow/40;
+  }
+}
+
+/* Subtle futuristic grid pattern overlay */
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 217, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 217, 255, 0.04) 1px, transparent 1px);
+}
+
+/* Scanline effect */
+.scanline {
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0),
+    rgba(255,255,255,0) 50%,
+    rgba(0, 217, 255, 0.03) 50%,
+    rgba(0, 217, 255, 0.03)
+  );
+  background-size: 100% 4px;
+}
