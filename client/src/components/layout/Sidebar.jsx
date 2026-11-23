@@ -1,5 +1,5 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import { FlaskConical, X, ShieldCheck, LogOut } from "lucide-react";
+import { FlaskConical, X, ShieldCheck } from "lucide-react";
 import { navByRole } from "../../lib/navigation";
 import { useAuth } from "../../context/AuthContext";
 import { useLanguage } from "../../context/LanguageContext";
@@ -22,14 +22,9 @@ const labelKeyMap = {
 
 export default function Sidebar({ role, open, onClose }) {
   const items = navByRole[role] || [];
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
 
   return (
     <>
@@ -107,8 +102,8 @@ export default function Sidebar({ role, open, onClose }) {
           </div>
         </nav>
 
-        {/* User Card & Logout Footer */}
-        {isAuthenticated && user && (
+        {/* User Card Footer */}
+        {user && (
           <div className="pt-4 border-t border-slate-200 dark:border-white/10 mt-auto">
             <div className="rounded-xl bg-slate-100 dark:bg-white/5 p-3 flex items-center justify-between border border-slate-200 dark:border-white/5">
               <div className="flex items-center gap-2.5 overflow-hidden">
@@ -122,17 +117,10 @@ export default function Sidebar({ role, open, onClose }) {
                     {user.name}
                   </div>
                   <div className="text-[10px] text-slate-500 dark:text-white/50 truncate">
-                    {user.department.split(" ")[0]}
+                    {user.department?.split(" ")[0] || "Engineering"}
                   </div>
                 </div>
               </div>
-              <button
-                onClick={handleLogout}
-                title="Sign out"
-                className="rounded-lg p-1.5 text-slate-400 dark:text-white/40 hover:bg-rose-500/10 hover:text-rose-500 transition"
-              >
-                <LogOut size={16} />
-              </button>
             </div>
           </div>
         )}

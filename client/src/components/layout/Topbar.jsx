@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  Menu, Sun, Moon, ShieldCheck, LogOut, User, KeyRound, ChevronDown, CheckCircle2, Bell,
+  Menu, Sun, Moon, ShieldCheck, User, KeyRound, ChevronDown, CheckCircle2, Bell,
   ArrowRight,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
@@ -12,7 +12,7 @@ import { getNotificationsList } from "../../lib/mockData";
 import { ROLES, dashboardPath } from "../../lib/navigation";
 
 export default function Topbar({ role, onRoleChange, onMenu }) {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const { t } = useLanguage();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -38,12 +38,6 @@ export default function Topbar({ role, onRoleChange, onMenu }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const handleLogout = () => {
-    logout();
-    setDropdownOpen(false);
-    navigate("/login");
-  };
 
   const notificationsPath = user?.role === "FACULTY" ? "/faculty/notifications" : "/student/notifications";
 
@@ -164,66 +158,49 @@ export default function Topbar({ role, onRoleChange, onMenu }) {
           {isDark ? <Sun size={17} className="text-amber-400" /> : <Moon size={17} className="text-purple-600" />}
         </button>
 
-        {/* User Profile & Logout Dropdown */}
-        {isAuthenticated ? (
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 p-1.5 pr-3 hover:border-cyan-glow/40 transition"
-            >
-              <img
-                src={user.avatar}
-                alt={user.name}
-                className="h-7 w-7 rounded-lg object-cover border border-cyan-glow/30"
-              />
-              <div className="hidden md:block text-left text-xs">
-                <span className="font-semibold text-slate-900 dark:text-white block line-clamp-1">
-                  {user.name}
-                </span>
-                <span className="text-[10px] text-slate-500 dark:text-white/50 font-mono">
-                  {user.role}
-                </span>
+        {/* User Profile Dropdown */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="flex items-center gap-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 p-1.5 pr-3 hover:border-cyan-glow/40 transition"
+          >
+            <img
+              src={user?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"}
+              alt={user?.name || "User"}
+              className="h-7 w-7 rounded-lg object-cover border border-cyan-glow/30"
+            />
+            <div className="hidden md:block text-left text-xs">
+              <span className="font-semibold text-slate-900 dark:text-white block line-clamp-1">
+                {user?.name || "Campus Researcher"}
+              </span>
+              <span className="text-[10px] text-slate-500 dark:text-white/50 font-mono">
+                {user?.role || role}
+              </span>
+            </div>
+            <ChevronDown size={14} className="text-slate-400 dark:text-white/40" />
+          </button>
+
+          {/* Dropdown Menu */}
+          {dropdownOpen && (
+            <div className="absolute right-0 mt-2 w-60 rounded-2xl border border-slate-200 dark:border-cyan-glow/30 bg-white dark:bg-[#0B1224] p-3 shadow-2xl backdrop-blur-xl z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="border-b border-slate-200 dark:border-white/10 pb-3 px-2">
+                <p className="text-xs font-semibold text-slate-900 dark:text-white">{user?.name || "Campus Researcher"}</p>
+                <p className="text-[11px] text-slate-500 dark:text-white/50 truncate">{user?.email || "researcher@campus.edu"}</p>
+                <span className="mt-1.5 badge-cyan text-[10px] py-0 px-2">{user?.role || role}</span>
               </div>
-              <ChevronDown size={14} className="text-slate-400 dark:text-white/40" />
-            </button>
 
-            {/* Dropdown Menu */}
-            {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-60 rounded-2xl border border-slate-200 dark:border-cyan-glow/30 bg-white dark:bg-[#0B1224] p-3 shadow-2xl backdrop-blur-xl z-50 animate-in fade-in zoom-in-95 duration-150">
-                <div className="border-b border-slate-200 dark:border-white/10 pb-3 px-2">
-                  <p className="text-xs font-semibold text-slate-900 dark:text-white">{user.name}</p>
-                  <p className="text-[11px] text-slate-500 dark:text-white/50 truncate">{user.email}</p>
-                  <span className="mt-1.5 badge-cyan text-[10px] py-0 px-2">{user.role}</span>
-                </div>
-
-                <div className="py-2 space-y-1">
-                  <Link
-                    to="/security"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 dark:text-white/80 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-cyan-glow transition"
-                  >
-                    <ShieldCheck size={16} className="text-cyan-glow" /> {t("nav.security", "Privacy & Security")}
-                  </Link>
-                </div>
-
-                <div className="border-t border-slate-200 dark:border-white/10 pt-2">
-                  <button
-                    onClick={handleLogout}
-                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition"
-                  >
-                    <LogOut size={16} /> {t("common.signOut", "Sign Out")}
-                  </button>
-                </div>
+              <div className="py-2 space-y-1">
+                <Link
+                  to="/security"
+                  onClick={() => setDropdownOpen(false)}
+                  className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 dark:text-white/80 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-cyan-glow transition"
+                >
+                  <ShieldCheck size={16} className="text-cyan-glow" /> {t("nav.security", "Privacy & Security")}
+                </Link>
               </div>
-            )}
-          </div>
-        ) : (
-          <Link to="/login">
-            <button className="rounded-xl bg-cyan-glow px-4 py-2 text-xs font-semibold text-[#070B18] hover:bg-cyan-glow/90 shadow-cyan transition">
-              {t("common.signIn", "Sign In")}
-            </button>
-          </Link>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
